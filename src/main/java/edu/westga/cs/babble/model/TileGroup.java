@@ -1,4 +1,4 @@
-package edu.westga.cs.babble.model;
+	package edu.westga.cs.babble.model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
