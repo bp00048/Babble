@@ -14,6 +14,12 @@ import edu.westga.cs.babble.model.TileBag;
 import edu.westga.cs.babble.model.TileNotInGroupException;
 import edu.westga.cs.babble.model.TileRack;
 import edu.westga.cs.babble.model.TileRackFullException;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -25,51 +31,60 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * @author windy
  *
  */
 public class BabbleController implements Initializable {
-	@FXML private ListView<Tile> tilesDisplayed;
-	@FXML private ListView<Tile> yourWordDisplayed;
-	@FXML private Label testLabel;
-	@FXML private Button resetButton;
-	@FXML private Button playWordButton;
+	@FXML
+	private ListView<Tile> tilesDisplayed;
+	@FXML
+	private ListView<Tile> yourWordDisplayed;
+	@FXML
+	private Label testLabel;
+	@FXML
+	private Button resetButton;
+	@FXML
+	private Button playWordButton;
+	@FXML
+	private TextField scoreField;
 	private TileRack tiles;
 	private TileBag tileBag;
 	private PlayedWord playedTiles;
 	private WordDictionary wordChecker;
-
+	private int runningScore;
 
 	/**
-	 * @throws EmptyTileBagException 
-	 * @throws TileRackFullException 
+	 * @throws EmptyTileBagException
+	 * @throws TileRackFullException
 	 * 
 	 */
 	public BabbleController() throws TileRackFullException, EmptyTileBagException {
-	this.tilesDisplayed = new ListView<>();
-	this.yourWordDisplayed = new ListView<>();
-	this.testLabel = new Label();
-	this.tileBag = new TileBag();
-	this.tiles = new TileRack();
-	this.playedTiles = new PlayedWord();
-	this.resetButton = new Button();
-	this.playWordButton = new Button();
-	this.wordChecker = new WordDictionary();
-	this.fillTiles();
-	
-	}
+		this.tilesDisplayed = new ListView<>();
+		this.yourWordDisplayed = new ListView<>();
+		this.scoreField = new TextField();
+		this.tileBag = new TileBag();
+		this.tiles = new TileRack();
+		this.playedTiles = new PlayedWord();
+		this.resetButton = new Button();
+		this.playWordButton = new Button();
+		this.wordChecker = new WordDictionary();
 
+		this.fillTiles();
+
+	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	
-        ObservableList<Tile> data = FXCollections.observableList(tiles.tiles());
-        this.tilesDisplayed.setItems(data);
+
+		ObservableList<Tile> data = FXCollections.observableList(tiles.tiles());
+		this.tilesDisplayed.setItems(data);
 
 		this.tilesDisplayed.setCellFactory(new Callback<ListView<Tile>, ListCell<Tile>>() {
 
@@ -81,7 +96,7 @@ public class BabbleController implements Initializable {
 					@Override
 					protected void updateItem(Tile t, boolean bln) {
 						super.updateItem(t, bln);
-						if(t == null) {
+						if (t == null) {
 							setText(null);
 						}
 						if (t != null) {
@@ -94,20 +109,20 @@ public class BabbleController implements Initializable {
 				return cell;
 			}
 		});
-	      
-		 yourWordDisplayed.setItems(playedTiles.tiles());
-		 
-        this.tilesDisplayed.setOnMousePressed(new EventHandler<MouseEvent>() {
-    	    public void handle(MouseEvent me) {
-    	    	playedTiles.append(tilesDisplayed.getSelectionModel().selectedItemProperty().get());
-    	    	try {
+
+		yourWordDisplayed.setItems(playedTiles.tiles());
+
+		this.tilesDisplayed.setOnMousePressed(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				playedTiles.append(tilesDisplayed.getSelectionModel().selectedItemProperty().get());
+				try {
 					tiles.remove(tilesDisplayed.getSelectionModel().selectedItemProperty().get());
 				} catch (TileNotInGroupException e) {
-				return;
+					return;
 				}
-    	    	tilesDisplayed.getSelectionModel().clearSelection();
-    	    }
-    	});
+				tilesDisplayed.getSelectionModel().clearSelection();
+			}
+		});
 
 		this.yourWordDisplayed.setCellFactory(new Callback<ListView<Tile>, ListCell<Tile>>() {
 
@@ -119,7 +134,7 @@ public class BabbleController implements Initializable {
 					@Override
 					protected void updateItem(Tile t, boolean bln) {
 						super.updateItem(t, bln);
-						if(t == null) {
+						if (t == null) {
 							setText(null);
 						}
 						if (t != null) {
@@ -132,61 +147,70 @@ public class BabbleController implements Initializable {
 				return cell;
 			}
 		});
-		
-		 this.yourWordDisplayed.setOnMousePressed(new EventHandler<MouseEvent>() {
-	    	    public void handle(MouseEvent me) {
-	    	    	tiles.append(yourWordDisplayed.getSelectionModel().selectedItemProperty().get());
-	    	    	try {
-						playedTiles.remove(yourWordDisplayed.getSelectionModel().selectedItemProperty().get());
-					} catch (TileNotInGroupException e) {
+
+		this.yourWordDisplayed.setOnMousePressed(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				tiles.append(yourWordDisplayed.getSelectionModel().selectedItemProperty().get());
+				try {
+					playedTiles.remove(yourWordDisplayed.getSelectionModel().selectedItemProperty().get());
+				} catch (TileNotInGroupException e) {
 					return;
-					}
-	    	    	yourWordDisplayed.getSelectionModel().clearSelection();
-	    	    	tilesDisplayed.setItems(tiles.tiles());
-	    	    }
-	    	});
-		 
-		 this.resetButton.setOnMousePressed(new EventHandler<MouseEvent>() {
-	    	    public void handle(MouseEvent me) {
-	    	    	for (Tile current : playedTiles.tiles()) {
-	    	    		tiles.append(current);
-	    	    }
-	    	    tilesDisplayed.setItems(tiles.tiles());
-	    	    playedTiles.clear();
-	    	    }
-	    	});
+				}
+				yourWordDisplayed.getSelectionModel().clearSelection();
+				tilesDisplayed.setItems(tiles.tiles());
+			}
+		});
 
-		 this.playWordButton.setOnMousePressed(new EventHandler<MouseEvent>() {
-	    	    public void handle(MouseEvent me) {
-	    	    String currentHand = playedTiles.getHand();
-	    	    	if(wordChecker.isValidWord(currentHand)) {
-	    	    		
-	    	    	 testLabel.setText(String.valueOf(playedTiles.getScore()) + " " + currentHand);
-	    	    	 playedTiles.clear();
-	    	    	
-	    	    } else {
-	    	    	Alert a = new Alert(AlertType.INFORMATION);
-	    	
-	    	        a.setHeaderText("Invalid word");
+		this.resetButton.setOnMousePressed(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				for (Tile current : playedTiles.tiles()) {
+					tiles.append(current);
+				}
+				tilesDisplayed.setItems(tiles.tiles());
+				playedTiles.clear();
+			}
+		});
 
-	    	        a.show();
-	    		
-	    	    }
-	    	    }
-	    	});
+		this.playWordButton.setOnMousePressed(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent me) {
+				String currentHand = playedTiles.getHand();
+				if (wordChecker.isValidWord(currentHand)) {
+					runningScore += playedTiles.getScore();
+					playedTiles.clear();
+					IntegerProperty integerProperty = new SimpleIntegerProperty(runningScore);
+					scoreField.textProperty().bindBidirectional(integerProperty, new NumberStringConverter());
+					int tilesNeeded = tiles.getNumberOfTilesNeeded();
+					do {
+						try {
+							tiles.append(tileBag.drawTile());
+						} catch (TileRackFullException | EmptyTileBagException e) {
+							e.printStackTrace();
+						}
+						tilesNeeded--;
+					} while (tilesNeeded != 0);
+					tilesDisplayed.setItems(tiles.tiles());
 
-	
+				} else {
+					Alert a = new Alert(AlertType.INFORMATION);
+
+					a.setHeaderText("Invalid word");
+
+					a.show();
+
+				}
+			}
+		});
+
 	}
-	
-	private void fillTiles() throws TileRackFullException, EmptyTileBagException {
+
+
+	public void fillTiles() throws TileRackFullException, EmptyTileBagException {
+		int tilesNeeded = tiles.getNumberOfTilesNeeded();
 		do {
-			this.tiles.append(this.tileBag.drawTile());
-			
-		} while (this.tiles.tiles().size() < 7);
-		
-		
-	}
-	
-	}
+			tiles.append(tileBag.drawTile());
+			tilesNeeded--;
+		} while (tilesNeeded != 0);
+		tilesDisplayed.setItems(tiles.tiles());
 
-
+	}
+}
