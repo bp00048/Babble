@@ -32,6 +32,8 @@ import javafx.util.converter.NumberStringConverter;
 /**
  * @author Blair Pattison
  * @version 08/29/2021
+ * 
+ *          Controller for the Babble GUI.
  *
  */
 public class BabbleController implements Initializable {
@@ -72,20 +74,31 @@ public class BabbleController implements Initializable {
 
 	}
 
+	/**
+	 * Initializes the components on the GUI and their respective listeners.
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	this.buildYourTilesDisplayed();
-	this.buildGameTilesDisplayed();
-		 
+		this.buildYourTilesDisplayed();
+		this.buildGameTilesDisplayed();
+
 		this.tilesDisplayed.setOnMousePressed(new GameTileSelectedListener());
 		this.yourWordDisplayed.setOnMousePressed(new YourTileSelectedListener());
 		this.resetButton.setOnMousePressed(new ResetListener());
 		this.playWordButton.setOnMousePressed(new PlayWordListener());
 	}
 
+	/**
+	 * Generates a list cell for the cell factory of the list view.
+	 * 
+	 * @author Blair Pattison
+	 *
+	 */
 	public class TileListCell extends ListCell<Tile> {
-		 public TileListCell() {    }
-		 @Override
+		public TileListCell() {
+		}
+
+		@Override
 		protected void updateItem(Tile t, boolean bln) {
 			super.updateItem(t, bln);
 			if (t == null) {
@@ -96,8 +109,14 @@ public class BabbleController implements Initializable {
 				setAccessibleText(String.valueOf(t.getLetter()));
 			}
 		}
-	 }
-	
+	}
+
+	/**
+	 * Listener for when the user selects a tile from the tile rack.
+	 * 
+	 * @author Blair Pattison
+	 *
+	 */
 	private class GameTileSelectedListener implements EventHandler<MouseEvent> {
 		public void handle(MouseEvent me) {
 			playedTiles.append(tilesDisplayed.getSelectionModel().selectedItemProperty().get());
@@ -109,8 +128,14 @@ public class BabbleController implements Initializable {
 			tilesDisplayed.getSelectionModel().clearSelection();
 		}
 	}
-	
-	
+
+	/**
+	 * Listener for when the user selects a tile from their own played word list
+	 * view.
+	 * 
+	 * @author Blair Pattison
+	 *
+	 */
 	private class YourTileSelectedListener implements EventHandler<MouseEvent> {
 		public void handle(MouseEvent me) {
 			tiles.append(yourWordDisplayed.getSelectionModel().selectedItemProperty().get());
@@ -123,8 +148,13 @@ public class BabbleController implements Initializable {
 			tilesDisplayed.setItems(tiles.tiles());
 		}
 	}
-	
-	
+
+	/**
+	 * Listener for when the user pushes the reset button.
+	 * 
+	 * @author Blair Pattison
+	 *
+	 */
 	private class ResetListener implements EventHandler<MouseEvent> {
 		public void handle(MouseEvent me) {
 			for (Tile current : playedTiles.tiles()) {
@@ -134,20 +164,24 @@ public class BabbleController implements Initializable {
 			playedTiles.clear();
 		}
 	}
-	
 
-	
-
-	private class PlayWordListener  implements EventHandler<MouseEvent> {
+	/**
+	 * Listener for when the user attempts to play the word they have generated in
+	 * their list view.
+	 * 
+	 * @author Blair Pattison
+	 *
+	 */
+	private class PlayWordListener implements EventHandler<MouseEvent> {
 		@Override
 		public void handle(MouseEvent me) {
 			if (wordChecker.isValidWord(playedTiles.getHand())) {
 				runningScore += playedTiles.getScore();
 				playedTiles.clear();
-				
+
 				IntegerProperty integerProperty = new SimpleIntegerProperty(runningScore);
 				scoreField.textProperty().bindBidirectional(integerProperty, new NumberStringConverter());
-				
+
 				try {
 					BabbleController.this.fillTiles();
 				} catch (TileRackFullException | EmptyTileBagException e) {
@@ -164,9 +198,14 @@ public class BabbleController implements Initializable {
 		}
 	}
 
-	
-
-	public void fillTiles() throws TileRackFullException, EmptyTileBagException {
+	/**
+	 * Helper method that refills the tile rack to the amount of tiles needed for
+	 * each game.
+	 * 
+	 * @throws TileRackFullException
+	 * @throws EmptyTileBagException
+	 */
+	private void fillTiles() throws TileRackFullException, EmptyTileBagException {
 		int tilesNeeded = tiles.getNumberOfTilesNeeded();
 		do {
 			tiles.append(tileBag.drawTile());
@@ -175,19 +214,25 @@ public class BabbleController implements Initializable {
 		tilesDisplayed.setItems(tiles.tiles());
 
 	}
-	
+
+	/**
+	 * Generates the cell factory for the your tiles list view and sets the tiles
+	 * list.
+	 */
 	private void buildYourTilesDisplayed() {
 		yourWordDisplayed.setItems(playedTiles.tiles());
-		 this.yourWordDisplayed.setCellFactory(new Callback<ListView<Tile>, ListCell<Tile>>() {
+		this.yourWordDisplayed.setCellFactory(new Callback<ListView<Tile>, ListCell<Tile>>() {
 			@Override
 			public ListCell<Tile> call(ListView<Tile> arg0) {
 				return new TileListCell();
 			}
-		 });
-		
+		});
+
 	}
-	
-	
+
+	/**
+	 * Generates the cell factory for the game tiles and sets the tiles list.
+	 */
 	private void buildGameTilesDisplayed() {
 		this.tilesDisplayed.setItems(tiles.tiles());
 		this.tilesDisplayed.setCellFactory(new Callback<ListView<Tile>, ListCell<Tile>>() {
@@ -195,7 +240,7 @@ public class BabbleController implements Initializable {
 			public ListCell<Tile> call(ListView<Tile> arg0) {
 				return new TileListCell();
 			}
-		 });
+		});
 	}
-	
+
 }
