@@ -12,18 +12,44 @@ import org.junit.jupiter.api.Test;
  * @author windy
  *
  */
-class TestPlayedWordGetScore {
+public class TestPlayedWordGetScore {
+	PlayedWord testPlayedWord;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
+		this.testPlayedWord = new PlayedWord();
 	}
 
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	public void emptyWordShouldHaveScoreOfZero() {
+		assertEquals(this.testPlayedWord.getScore(), 0);
 	}
 
+	@Test
+	public void scoreAOneTileWord() {
+		Tile testTile = new Tile('E');
+		this.testPlayedWord.append(testTile);
+		assertEquals(this.testPlayedWord.getScore(), 1);
+	}
+
+	@Test
+	public void scoreAWordWithMultipleDifferingTiles() {
+		Tile testTileOne = new Tile('E');
+		Tile testTileTwo = new Tile('X');
+		this.testPlayedWord.append(testTileOne);
+		this.testPlayedWord.append(testTileTwo);
+		assertEquals(this.testPlayedWord.getScore(), 9);
+	}
+
+	@Test
+	public void scoreAWordContainingDuplicateTiles() {
+		Tile testTileOne = new Tile('E');
+		Tile testTileTwo = new Tile('E');
+		this.testPlayedWord.append(testTileOne);
+		this.testPlayedWord.append(testTileTwo);
+		assertEquals(this.testPlayedWord.getScore(), 2);
+	}
 }
