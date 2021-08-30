@@ -3,13 +3,13 @@
  */
 package edu.westga.cs.babble.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
 public class TestPlayedWordGetScore {

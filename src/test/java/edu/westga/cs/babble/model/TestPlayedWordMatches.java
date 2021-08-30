@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
 public class TestPlayedWordMatches {
@@ -115,8 +115,10 @@ public class TestPlayedWordMatches {
 
 	@Test
 	public void shouldNotAllowNull() {
+		assertEquals(this.testPlayedWord.getHand(), "");
 		assertThrows(IllegalArgumentException.class, () -> {
 			this.testPlayedWord.matches(null);
 		});
+		assertFalse(this.testPlayedWord.matches(""));
 	}
 }

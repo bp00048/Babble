@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
 public class TestTileGroupRemove {

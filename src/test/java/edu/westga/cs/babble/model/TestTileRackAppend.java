@@ -9,30 +9,37 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
-class TestTileRackAppend {
+public class TestTileRackAppend {
 	TileRack testTileRack;
-	TileBag testTileBag;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 		this.testTileRack = new TileRack();
-		this.testTileBag = new TileBag();
+
 	}
 
 	@Test
 	public void shouldNotAppendToFullRack() throws TileRackFullException, EmptyTileBagException {
 		for (int i = 0; i < 7; i++) {
-			this.testTileRack.append(this.testTileBag.drawTile());
+			Tile testTile = new Tile('A');
+			this.testTileRack.append(testTile);
 		}
+		assertEquals(this.testTileRack.tiles().size(), 7);
+		assertEquals(this.testTileRack.getHand(), "AAAAAAA");
+		assertEquals(this.testTileRack.getNumberOfTilesNeeded(), 0);
 
 		assertThrows(TileRackFullException.class, () -> {
-			this.testTileRack.append(this.testTileBag.drawTile());
+			Tile testTileTwo = new Tile('T');
+			this.testTileRack.append(testTileTwo);
 		});
+		assertEquals(this.testTileRack.tiles().size(), 7);
+		assertEquals(this.testTileRack.getHand(), "AAAAAAA");
 	}
+
 }

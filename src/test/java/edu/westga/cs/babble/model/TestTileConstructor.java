@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
 public class TestTileConstructor {
@@ -31,12 +31,10 @@ public class TestTileConstructor {
 		assertThrows(IllegalArgumentException.class, () -> {
 			this.testTile = new Tile('7');
 		});
-		
+
 		assertThrows(IllegalArgumentException.class, () -> {
 			this.testTile = new Tile('!');
 		});
-		
-
 
 	}
 
@@ -177,7 +175,7 @@ public class TestTileConstructor {
 		assertEquals(testTileUpperX.getPointValue(), 8);
 
 	}
-	
+
 	@Test
 	public void shouldCreateTenPointTiles() {
 

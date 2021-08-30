@@ -12,16 +12,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
-class TestTileBagDrawTile {
+public class TestTileBagDrawTile {
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 	}
 
 	@Test
@@ -37,14 +37,15 @@ class TestTileBagDrawTile {
 	}
 
 	@Test
-	public void canNotDrawTooManyTiles() {
+	public void canNotDrawTooManyTiles() throws EmptyTileBagException {
 		TileBag testTileBag = new TileBag();
-
+		for (int i = 0; i < 98; i++) {
+			testTileBag.drawTile();
+		}
 		assertThrows(EmptyTileBagException.class, () -> {
-			for (int i = 0; i < 99; i++) {
-				testTileBag.drawTile();
-			}
+			testTileBag.drawTile();
 		});
+
 	}
 
 	@Test
@@ -161,32 +162,32 @@ class TestTileBagDrawTile {
 			}
 		}
 
-			assertTrue(testTileBag.isEmpty());
-			assertEquals(E, 12);
-			assertEquals(A, 9);
-			assertEquals(I, 9);
-			assertEquals(O, 8);
-			assertEquals(N, 6);
-			assertEquals(R, 6);
-			assertEquals(T, 6);
-			assertEquals(L, 4);
-			assertEquals(S, 4);
-			assertEquals(U, 4);
-			assertEquals(D, 4);
-			assertEquals(G, 3);
-			assertEquals(B, 2);
-			assertEquals(C, 2);
-			assertEquals(M, 2);
-			assertEquals(P, 2);
-			assertEquals(F, 2);
-			assertEquals(H, 2);
-			assertEquals(V, 2);
-			assertEquals(W, 2);
-			assertEquals(Y, 2);
-			assertEquals(K, 1);
-			assertEquals(J, 1);
-			assertEquals(X, 1);
-			assertEquals(Q, 1);
-			assertEquals(Z, 1);
-		}
+		assertTrue(testTileBag.isEmpty());
+		assertEquals(E, 12);
+		assertEquals(A, 9);
+		assertEquals(I, 9);
+		assertEquals(O, 8);
+		assertEquals(N, 6);
+		assertEquals(R, 6);
+		assertEquals(T, 6);
+		assertEquals(L, 4);
+		assertEquals(S, 4);
+		assertEquals(U, 4);
+		assertEquals(D, 4);
+		assertEquals(G, 3);
+		assertEquals(B, 2);
+		assertEquals(C, 2);
+		assertEquals(M, 2);
+		assertEquals(P, 2);
+		assertEquals(F, 2);
+		assertEquals(H, 2);
+		assertEquals(V, 2);
+		assertEquals(W, 2);
+		assertEquals(Y, 2);
+		assertEquals(K, 1);
+		assertEquals(J, 1);
+		assertEquals(X, 1);
+		assertEquals(Q, 1);
+		assertEquals(Z, 1);
+	}
 }

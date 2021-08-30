@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author windy
+ * @author Blair Pattison
  *
  */
 public class TestTileRackGetNumberOfTilesNeeded {
@@ -49,14 +49,14 @@ public class TestTileRackGetNumberOfTilesNeeded {
 
 		assertEquals(this.testTileRack.getNumberOfTilesNeeded(), 3);
 	}
-	
+
 	@Test
 	public void fullRackNeedsZeroTiles() throws TileRackFullException, EmptyTileBagException {
 		TileBag testTileBag = new TileBag();
 		for (int i = 0; i < 7; i++) {
 			this.testTileRack.append(testTileBag.drawTile());
-		
-	}
+
+		}
 		assertEquals(this.testTileRack.getNumberOfTilesNeeded(), 0);
 	}
 
